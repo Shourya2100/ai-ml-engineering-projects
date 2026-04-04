@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eval Report — {{ report.run_id }}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0f1117;
+            color: #e1e4e8;
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container { max-width: 960px; margin: 0 auto; }
+
+        /* Header */
+        .header {
+            border-bottom: 1px solid #2d333b;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #f0f6fc;
+            margin-bottom: 0.75rem;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+            color: #8b949e;
+        }
+
+        .header-meta span { display: inline-flex; align-items: center; gap: 0.35rem; }
+
+        .overall-score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+
+        .score-high { color: #3fb950; }
+        .score-mid  { color: #d29922; }
+        .score-low  { color: #f85149; }
+
+        /* Summary bar */
+        .summary {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            background: #161b22;
+            border: 1px solid #2d333b;
+            text-align: center;
+        }
+
+        .summary-card .label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #8b949e;
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-card .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .summary-card .value.green { color: #3fb950; }
+        .summary-card .value.red   { color: #f85149; }
+        .summary-card .value.white { color: #f0f6fc; }
+
+        /* Test case cards */
+        .test-card {
+            background: #161b22;
+            border: 1px solid #2d333b;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+            overflow: hidden;
+        }
+
+        .test-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #2d333b;
+        }
+
+        .test-card-header .test-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f0f6fc;
+        }
+
+        .test-card-header .test-info .test-desc {
+            font-size: 0.85rem;
+            color: #8b949e;
+            margin-top: 0.15rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        .badge-pass { background: #1a3a2a; color: #3fb950; border: 1px solid #2a5a3a; }
+        .badge-fail { background: #3a1a1a; color: #f85149; border: 1px solid #5a2a2a; }
+
+        .test-card-body { padding: 1rem 1.25rem; }
+
+        .test-score {
+            font-size: 0.85rem;
+            color: #8b949e;
+            margin-bottom: 0.75rem;
+        }
+
+        .test-score strong { color: #e1e4e8; }
+
+        .response-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #8b949e;
+            margin-bottom: 0.35rem;
+        }
+
+        .response-text {
+            background: #0d1117;
+            border: 1px solid #2d333b;
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, monospace;
+            font-size: 0.8rem;
+            color: #c9d1d9;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-bottom: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Criteria table */
+        .criteria-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .criteria-table th {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 2px solid #2d333b;
+            color: #8b949e;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .criteria-table td {
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid #1e252e;
+            color: #c9d1d9;
+        }
+
+        .criteria-table tr:last-child td { border-bottom: none; }
+
+        .icon-pass { color: #3fb950; }
+        .icon-fail { color: #f85149; }
+
+        /* Footer */
+        .footer {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #2d333b;
+            font-size: 0.75rem;
+            color: #484f58;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>LLM Eval Report</h1>
+            <div class="header-meta">
+                <span>Run: <strong>{{ report.run_id }}</strong></span>
+                <span>Suite: <strong>{{ report.suite_name }}</strong></span>
+                <span>Model: <strong>{{ report.model }}</strong></span>
+                <span>Generated: <strong>{{ generated_at }}</strong></span>
+            </div>
+            <div class="overall-score {% if report.overall_score >= 80 %}score-high{% elif report.overall_score >= 50 %}score-mid{% else %}score-low{% endif %}">
+                {{ "%.1f" | format(report.overall_score) }}%
+            </div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card">
+                <div class="label">Total</div>
+                <div class="value white">{{ report.total_cases }}</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Passed</div>
+                <div class="value green">{{ report.passed }}</div>
+            </div>
+            <div class="summary-card">
+                <div class="label">Failed</div>
+                <div class="value red">{{ report.failed }}</div>
+            </div>
+        </div>
+
+        {% for result in report.results %}
+        <div class="test-card">
+            <div class="test-card-header">
+                <div class="test-info">
+                    <h3>{{ result.id }}</h3>
+                    <div class="test-desc">{{ result.description }}</div>
+                </div>
+                <span class="badge {% if result.passed %}badge-pass{% else %}badge-fail{% endif %}">
+                    {{ "Pass" if result.passed else "Fail" }}
+                </span>
+            </div>
+            <div class="test-card-body">
+                <div class="test-score">Score: <strong>{{ "%.1f" | format(result.score) }}%</strong></div>
+                <div class="response-label">LLM Response</div>
+                <pre class="response-text">{{ result.llm_response }}</pre>
+                <table class="criteria-table">
+                    <thead>
+                        <tr>
+                            <th>Criterion</th>
+                            <th>Result</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cr in result.criteria_results %}
+                        <tr>
+                            <td>{{ cr.type }}</td>
+                            <td>
+                                {% if cr.passed %}
+                                    <span class="icon-pass">&#10003;</span>
+                                {% else %}
+                                    <span class="icon-fail">&#10007;</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ cr.reason }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="footer">
+            Generated by LLM Eval Harness
+        </div>
+    </div>
+</body>
+</html>
