@@ -1,0 +1,53 @@
+suite_name: "Sentiment Classification"
+model: "claude-3-5-haiku-20241022"
+max_tokens: 50
+temperature: 0.0
+
+test_cases:
+  - id: "tc_001"
+    description: "Positive review classified correctly"
+    prompt: |
+      Classify the sentiment of the following text as exactly one word: positive, negative, or neutral.
+      Text: {{ input }}
+    input: |
+      Absolutely loved this product! Best purchase I've made all year.
+      The quality is outstanding and shipping was super fast.
+    criteria:
+      - type: contains_keywords
+        keywords: ["positive"]
+      - type: excludes_keywords
+        keywords: ["negative", "neutral"]
+      - type: regex_match
+        pattern: "(?i)positive"
+
+  - id: "tc_002"
+    description: "Negative review classified correctly"
+    prompt: |
+      Classify the sentiment of the following text as exactly one word: positive, negative, or neutral.
+      Text: {{ input }}
+    input: |
+      Terrible experience. The item arrived broken and customer support
+      was unhelpful. I want a full refund immediately.
+    criteria:
+      - type: contains_keywords
+        keywords: ["negative"]
+      - type: excludes_keywords
+        keywords: ["positive", "neutral"]
+      - type: regex_match
+        pattern: "(?i)negative"
+
+  - id: "tc_003"
+    description: "Neutral statement classified correctly"
+    prompt: |
+      Classify the sentiment of the following text as exactly one word: positive, negative, or neutral.
+      Text: {{ input }}
+    input: |
+      The package arrived on Tuesday. It contained the items listed
+      on the invoice. The box was a standard brown cardboard box.
+    criteria:
+      - type: contains_keywords
+        keywords: ["neutral"]
+      - type: excludes_keywords
+        keywords: ["positive", "negative"]
+      - type: regex_match
+        pattern: "(?i)neutral"

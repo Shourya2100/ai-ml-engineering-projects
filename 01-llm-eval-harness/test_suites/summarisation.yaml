@@ -1,0 +1,37 @@
+suite_name: "Summarisation Quality"
+model: "claude-3-5-haiku-20241022"
+max_tokens: 300
+temperature: 0.0
+
+test_cases:
+  - id: "tc_001"
+    description: "Summarise a news article in 2 sentences"
+    prompt: |
+      Summarise the following article in exactly 2 sentences.
+      Article: {{ input }}
+    input: |
+      The Federal Reserve raised interest rates by 0.25% on Wednesday,
+      citing persistent inflation above its 2% target. Economists expect
+      at least one more hike before the end of the year. Markets reacted
+      negatively, with the S&P 500 dropping 1.2% by close of trading.
+    criteria:
+      - type: max_length
+        value: 150
+      - type: contains_keywords
+        keywords: ["Federal Reserve", "inflation"]
+      - type: sentence_count
+        expected: 2
+
+  - id: "tc_002"
+    description: "Summarise without losing key numbers"
+    prompt: |
+      Summarise the following in 1 sentence, keeping all numerical figures.
+      Text: {{ input }}
+    input: |
+      The company reported Q3 revenue of $4.2 billion, up 18% year-on-year,
+      with net profit margins improving to 22% from 19% last quarter.
+    criteria:
+      - type: contains_keywords
+        keywords: ["4.2", "18%", "22%"]
+      - type: max_length
+        value: 120
