@@ -4,5 +4,7 @@ __pycache__/
 venv/
 .venv/
 reports/
+chroma_db/
+*.db
 .DS_Store
 *.egg-info/
