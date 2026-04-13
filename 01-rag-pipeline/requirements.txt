@@ -1,0 +1,8 @@
+sentence-transformers
+chromadb
+rank-bm25
+tiktoken
+sqlalchemy
+httpx
+pytest
+pytest-asyncio
