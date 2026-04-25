@@ -11,6 +11,8 @@ from fastapi.staticfiles import StaticFiles
 
 from common.logging import get_logger
 from app.api.routes.health import router as health_router
+from app.db.chroma import get_collection
+from app.db.sqlite import create_tables
 
 logger = get_logger(__name__)
 
@@ -20,7 +22,9 @@ STATIC_DIR = Path(__file__).resolve().parent / "static"
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting RAG Pipeline...")
-    # Embedder, Reranker, ChromaDB, and SQLite will be initialised here in later phases
+    create_tables()
+    app.state.chroma_collection = get_collection()
+    # Embedder and Reranker will be initialised here in later phases
     yield
     logger.info("Shutting down RAG Pipeline.")
 
