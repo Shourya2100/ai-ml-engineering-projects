@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from common.logging import get_logger
+from app.api.routes.documents import router as documents_router
 from app.api.routes.health import router as health_router
 from app.core.embedder import Embedder
 from app.db.chroma import get_collection
@@ -42,6 +43,7 @@ app.add_middleware(
 )
 
 app.include_router(health_router)
+app.include_router(documents_router)
 
 
 @app.get("/")
