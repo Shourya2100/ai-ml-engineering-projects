@@ -13,6 +13,7 @@ from common.logging import get_logger
 from app.api.routes.documents import router as documents_router
 from app.api.routes.health import router as health_router
 from app.core.embedder import Embedder
+from app.core.reranker import Reranker
 from app.db.chroma import get_collection
 from app.db.sqlite import create_tables
 
@@ -27,7 +28,7 @@ async def lifespan(app: FastAPI):
     create_tables()
     app.state.chroma_collection = get_collection()
     app.state.embedder = Embedder()
-    # Reranker will be initialised here in a later phase
+    app.state.reranker = Reranker()
     yield
     logger.info("Shutting down RAG Pipeline.")
 
